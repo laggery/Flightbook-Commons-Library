@@ -1,0 +1,12 @@
+{
+  "name": "flightbook-commons-library",
+  "version": "0.0.4",
+  "peerDependencies": {
+    "@angular/common": "^10.1.3",
+    "@angular/core": "^10.1.3",
+    "@auth0/angular-jwt": "^5.0.1"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}
