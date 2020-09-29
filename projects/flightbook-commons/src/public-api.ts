@@ -24,3 +24,6 @@ export * from './lib/account/account.service';
 export * from './lib/account/auth-guard.service';
 export * from './lib/account/user';
 export * from './lib/account/account.module';
+
+export * from './lib/application-pipes/application-pipes.module';
+export * from './lib/application-pipes/hours-format/hours-format.pipe';
