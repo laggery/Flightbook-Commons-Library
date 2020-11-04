@@ -22,7 +22,7 @@ export class GliderService extends Store<Glider[]> {
     this.filtered$ = new BehaviorSubject(false);
   }
 
-  getGliders({ limit = null, offset = null, clearStore = false }: { limit?: number, offset?: number, clearStore?: boolean } = {}): Observable<Glider[]> {
+  getGliders({ limit = null, offset = null, store = true, clearStore = false }: { limit?: number, offset?: number, store?: boolean, clearStore?: boolean } = {}): Observable<Glider[]> {
     let params = new HttpParams();
     if (limit) {
       params = params.append('limit', limit.toString());
@@ -50,12 +50,14 @@ export class GliderService extends Store<Glider[]> {
     return this.http.get<Glider[]>(`${this.environment.baseUrl}/gliders`, { params }).pipe(
       map((response: Glider[]) => {
         let newState;
-        if (clearStore) {
-          newState = [...response];
-        } else {
-          newState = [...this.getValue(), ...response];
+        if (store) {
+          if (clearStore) {
+            newState = [...response];
+          } else {
+            newState = [...this.getValue(), ...response];
+          }
+          this.setState(newState);
         }
-        this.setState(newState);
         return response;
       })
     );

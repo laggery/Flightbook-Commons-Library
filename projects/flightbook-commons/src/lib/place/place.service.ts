@@ -14,7 +14,7 @@ export class PlaceService extends Store<Place[]> {
     super([]);
   }
 
-  getPlaces({ limit = null, offset = null }: { limit?: number, offset?: number } = {}): Observable<Place[]> {
+  getPlaces({ limit = null, offset = null, store = true, clearStore = false }: { limit?: number, offset?: number, store?: boolean, clearStore?: boolean } = {}): Observable<Place[]> {
     let params = new HttpParams();
     if (limit) {
       params = params.append('limit', limit.toString());
@@ -25,8 +25,15 @@ export class PlaceService extends Store<Place[]> {
 
     return this.http.get<Place[]>(`${this.environment.baseUrl}/places`, { params }).pipe(
       map((response: Place[]) => {
-        const newState = [...this.getValue(), ...response];
-        this.setState(newState);
+        let newState
+        if (store) {
+          if (clearStore) {
+            newState = [...response];
+          } else {
+            newState = [...this.getValue(), ...response];
+          }
+          this.setState(newState);
+        }
         return response;
       })
     );

@@ -7,8 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "build-npm": "ng build FlightbookCommons --prod",
-    "publish": "npm publish dist/flightbook-commons/",
+    "build-npm": "ng build FlightbookCommons",
+    "publish": "npm publish dist/flightbook-commons/ --ignore-scripts",
     "patch": "npm version patch"
   },
   "private": true,
