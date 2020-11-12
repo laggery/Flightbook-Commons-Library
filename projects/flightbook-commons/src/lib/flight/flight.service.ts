@@ -7,6 +7,7 @@ import { Store } from '../store.class';
 import { FlightFilter } from './flight-filter';
 import * as moment from 'moment';
 import { FlightStatistic } from './flightStatistic';
+import { Pager } from '../commons/model/pager';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,17 @@ export class FlightService extends Store<Flight[]> {
   getStatistics(): Observable<FlightStatistic> {
     let params: HttpParams = this.createFilterParams();
     return this.http.get<FlightStatistic>(`${this.environment.baseUrl}/flights/statistic`, { params })
+  }
+
+  getPager({ limit = null, offset = null }: { limit?: number, offset?: number } = {}): Observable<Pager> {
+    let params: HttpParams = this.createFilterParams();
+    if (limit) {
+      params = params.append('limit', limit.toString());
+    }
+    if (offset) {
+      params = params.append('offset', offset.toString());
+    }
+    return this.http.get<Pager>(`${this.environment.baseUrl}/flights/pager`, { params });
   }
 
   nbFlightsByPlaceId(placeId: number): Observable<any> {

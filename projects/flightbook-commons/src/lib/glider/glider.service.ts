@@ -5,6 +5,7 @@ import { HttpParams, HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Store } from '../store.class';
 import { GliderFilter } from './glider-filter';
+import { Pager } from '../commons/model/pager';
 
 @Injectable({
   providedIn: 'root'
@@ -23,29 +24,7 @@ export class GliderService extends Store<Glider[]> {
   }
 
   getGliders({ limit = null, offset = null, store = true, clearStore = false }: { limit?: number, offset?: number, store?: boolean, clearStore?: boolean } = {}): Observable<Glider[]> {
-    let params = new HttpParams();
-    if (limit) {
-      params = params.append('limit', limit.toString());
-    }
-    if (offset) {
-      params = params.append('offset', offset.toString());
-    }
-
-    // Filter check
-    let filterState = false;
-    if (this.filter.brand && this.filter.brand !== "") {
-      params = params.append('brand', this.filter.brand);
-      filterState = true
-    }
-    if (this.filter.name && this.filter.name !== "") {
-      params = params.append('name', this.filter.name);
-      filterState = true
-    }
-    if (this.filter.type && this.filter.type !== "") {
-      params = params.append('type', this.filter.type);
-      filterState = true
-    }
-    this.setFilterState(filterState);
+    let params: HttpParams = this.createFilterParams(limit, offset);
 
     return this.http.get<Glider[]>(`${this.environment.baseUrl}/gliders`, { params }).pipe(
       map((response: Glider[]) => {
@@ -61,6 +40,11 @@ export class GliderService extends Store<Glider[]> {
         return response;
       })
     );
+  }
+
+  getPager({ limit = null, offset = null }: { limit?: number, offset?: number } = {}): Observable<Pager> {
+    let params: HttpParams = this.createFilterParams(limit, offset);
+    return this.http.get<Pager>(`${this.environment.baseUrl}/gliders/pager`, { params });
   }
 
   postGlider(glider: Glider): Observable<Glider> {
@@ -103,5 +87,32 @@ export class GliderService extends Store<Glider[]> {
 
   private setFilterState(nextState: boolean) {
     this.filtered$.next(nextState);
+  }
+
+  private createFilterParams(limit: Number, offset: Number): HttpParams {
+    let params = new HttpParams();
+    let filterState = false;
+    if (this.filter.brand && this.filter.brand !== "") {
+      params = params.append('brand', this.filter.brand);
+      filterState = true
+    }
+    if (this.filter.name && this.filter.name !== "") {
+      params = params.append('name', this.filter.name);
+      filterState = true
+    }
+    if (this.filter.type && this.filter.type !== "") {
+      params = params.append('type', this.filter.type);
+      filterState = true
+    }
+
+    if (limit) {
+      params = params.append('limit', limit.toString());
+    }
+    if (offset) {
+      params = params.append('offset', offset.toString());
+    }
+
+    this.setFilterState(filterState);
+    return params;
   }
 }

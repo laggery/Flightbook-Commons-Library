@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Place } from './place';
 import { Store } from '../store.class';
+import { Pager } from '../commons/model/pager';
 
 @Injectable({
   providedIn: 'root'
@@ -15,13 +16,7 @@ export class PlaceService extends Store<Place[]> {
   }
 
   getPlaces({ limit = null, offset = null, store = true, clearStore = false }: { limit?: number, offset?: number, store?: boolean, clearStore?: boolean } = {}): Observable<Place[]> {
-    let params = new HttpParams();
-    if (limit) {
-      params = params.append('limit', limit.toString());
-    }
-    if (offset) {
-      params = params.append('offset', offset.toString());
-    }
+    let params: HttpParams = this.createFilterParams(limit, offset);
 
     return this.http.get<Place[]>(`${this.environment.baseUrl}/places`, { params }).pipe(
       map((response: Place[]) => {
@@ -37,6 +32,11 @@ export class PlaceService extends Store<Place[]> {
         return response;
       })
     );
+  }
+
+  getPager({ limit = null, offset = null }: { limit?: number, offset?: number } = {}): Observable<Pager> {
+    let params: HttpParams = this.createFilterParams(limit, offset);
+    return this.http.get<Pager>(`${this.environment.baseUrl}/places/pager`, { params });
   }
 
   getPlacesByName(name: string, { limit = null, offset = null }: { limit?: number, offset?: number } = {}): Observable<Place[]> {
@@ -83,5 +83,16 @@ export class PlaceService extends Store<Place[]> {
         return response;
       })
     );
+  }
+
+  private createFilterParams(limit: Number, offset: Number): HttpParams {
+    let params = new HttpParams();
+    if (limit) {
+      params = params.append('limit', limit.toString());
+    }
+    if (offset) {
+      params = params.append('offset', offset.toString());
+    }
+    return params;
   }
 }
