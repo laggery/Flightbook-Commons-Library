@@ -33,3 +33,7 @@ export * from './lib/commons/interceptor/auth.interceptor';
 export * from './lib/commons/interceptor/error.interceptor';
 
 export * from './lib/commons/model/pager';
+
+export * from './lib/export/export.module';
+export * from './lib/export/services/xlsx-export.service';
+export * from './lib/export/services/pdf-export.service';
