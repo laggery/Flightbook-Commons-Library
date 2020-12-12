@@ -14,7 +14,10 @@ export class PdfExportService {
 
   constructor(private datePipe: DatePipe, private translate: TranslateService) { }
 
-  generatePdf(flights: Flight[], user: User): TCreatedPdf {
+  generatePdf(flights: Flight[], user: User, generateFrom?: string): TCreatedPdf {
+    if (!generateFrom) {
+      generateFrom = 'https://flightbook.ch';
+    }
 
     let flightList: any = [];
     let startPlaces = new Set();
@@ -37,8 +40,7 @@ export class PdfExportService {
         { text: flight.landing?.name, style: 'tableRow' },
         { text: flight.time, style: 'tableRow' },
         { text: flight.km, style: 'tableRow' },
-        { text: flight.description, style: 'tableRow' },
-        { text: '', style: 'tableRow' }
+        { text: flight.description, style: 'tableRow' }
       ])
     })
 
@@ -61,26 +63,37 @@ export class PdfExportService {
     })
 
     let docDefinition: TDocumentDefinitions = {
+      pageMargins: [40, 40, 40, 80],
       footer: (currentPage, pageCount, options) => {
-        return {
-          style: { color: 'grey' },
-          columns: [
-            {
-              margin: [40, 0, 0, 0],
-              style: { alignment: "left" },
-              text: 'https://flightbook.ch'
-            },
-            {
-              style: { alignment: "center" },
-              text: `${currentPage.toString()}/${pageCount}`
-            },
-            {
-              margin: [0, 0, 40, 0],
-              style: { alignment: "right" },
-              text: this.datePipe.transform(new Date(), 'dd.MM.yyyy')
-            }
-          ]
-        };
+        let signatureColor = 'white';
+        if (options.orientation === 'landscape') {
+          signatureColor = "black";
+        }
+        return [
+          {
+            style: { color: signatureColor },
+            margin: [40, 20, 0, 15],
+            text: `${this.translate.instant('export.school')}: _______________________________ ${this.translate.instant('flight.signature')}: _______________________________ `
+          },
+          {
+            style: { color: 'grey' },
+            columns: [
+              {
+                margin: [40, 0, 0, 0],
+                style: { alignment: "left" },
+                text: generateFrom
+              },
+              {
+                style: { alignment: "center" },
+                text: `${currentPage.toString()}/${pageCount}`
+              },
+              {
+                margin: [0, 0, 40, 0],
+                style: { alignment: "right" },
+                text: this.datePipe.transform(new Date(), 'dd.MM.yyyy')
+              }
+            ]
+          }];
       },
       header: (currentPage, pageCount, options) => {
         let header: any = {};
@@ -173,7 +186,7 @@ export class PdfExportService {
         {
           style: 'flightTable',
           table: {
-            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 40, 20, '*', 55],
+            widths: ['auto', 'auto', 80, 'auto', 'auto', 45, 20, '*'],
             headerRows: 1,
             body: [
               [
@@ -184,8 +197,7 @@ export class PdfExportService {
                 { text: this.translate.instant('flight.landing'), style: 'tableHeader' },
                 { text: this.translate.instant('flight.time'), style: 'tableHeader' },
                 { text: this.translate.instant('flight.km'), style: 'tableHeader' },
-                { text: this.translate.instant('flight.description'), style: 'tableHeader' },
-                { text: this.translate.instant('flight.signature'), styles: 'tableHeader', layout: '' }
+                { text: this.translate.instant('flight.description'), style: 'tableHeader' }
               ],
               ...flightList,
             ]
