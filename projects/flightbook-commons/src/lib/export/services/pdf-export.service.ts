@@ -73,7 +73,7 @@ export class PdfExportService {
           {
             style: { color: signatureColor },
             margin: [40, 20, 0, 15],
-            text: `${this.translate.instant('export.school')}: _______________________________ ${this.translate.instant('flight.signature')}: _______________________________ `
+            text: `${this.translate.instant('export.school')}: _______________________________`
           },
           {
             style: { color: 'grey' },
