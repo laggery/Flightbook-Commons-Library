@@ -51,9 +51,12 @@ export class FlightService extends Store<Flight[]> {
     );
   }
 
-  getStatistics(): Observable<FlightStatistic> {
+  getStatistics(years?: boolean): Observable<FlightStatistic | FlightStatistic[]> {
     let params: HttpParams = this.createFilterParams();
-    return this.http.get<FlightStatistic>(`${this.environment.baseUrl}/flights/statistic`, { params })
+    if (years) {
+      params = params.append('years', "1");
+    }
+    return this.http.get<FlightStatistic | FlightStatistic[]>(`${this.environment.baseUrl}/flights/statistic`, { params })
   }
 
   getPager({ limit = null, offset = null }: { limit?: number, offset?: number } = {}): Observable<Pager> {
