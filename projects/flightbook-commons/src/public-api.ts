@@ -37,3 +37,6 @@ export * from './lib/commons/model/pager';
 export * from './lib/export/export.module';
 export * from './lib/export/services/xlsx-export.service';
 export * from './lib/export/services/pdf-export.service';
+
+export * from './lib/fileupload/fileupload.service';
+export * from './lib/fileupload/fileupload.module';

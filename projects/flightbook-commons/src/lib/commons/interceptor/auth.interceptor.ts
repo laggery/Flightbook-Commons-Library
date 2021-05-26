@@ -42,6 +42,9 @@ export class HttpAuthInterceptor implements HttpInterceptor {
         if (validityCheck) {
             const authenticated = await this.accoutService.isAuth();
             if (authenticated) {
+                if (req.url.includes('upload/igcfile')){
+                  return next.handle(this.setFormDataHeaders(req)).toPromise();
+                }
                 return next.handle(this.setHeaders(req)).toPromise();
             } else {
                 // this.menuCtrl.enable(false);
@@ -56,8 +59,17 @@ export class HttpAuthInterceptor implements HttpInterceptor {
         return request.clone({
             setHeaders: {
                 'Content-Type': 'application/json',
+
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`
             }
         });
     }
+  private setFormDataHeaders(request: HttpRequest<any>): HttpRequest<any> {
+    return request.clone({
+      setHeaders: {
+        'Content-Type': 'multipart/form-data; boundary=--------------------------23435342553',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`
+      }
+    });
+  }
 }
