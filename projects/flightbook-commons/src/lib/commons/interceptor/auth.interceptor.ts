@@ -59,7 +59,6 @@ export class HttpAuthInterceptor implements HttpInterceptor {
         return request.clone({
             setHeaders: {
                 'Content-Type': 'application/json',
-
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`
             }
         });
@@ -67,7 +66,6 @@ export class HttpAuthInterceptor implements HttpInterceptor {
   private setFormDataHeaders(request: HttpRequest<any>): HttpRequest<any> {
     return request.clone({
       setHeaders: {
-        'Content-Type': 'multipart/form-data; boundary=--------------------------23435342553',
         Authorization: `Bearer ${localStorage.getItem('access_token')}`
       }
     });
