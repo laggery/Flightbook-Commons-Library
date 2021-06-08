@@ -38,4 +38,13 @@ export class FileUploadService {
           }
         }));
   }
+
+  getFile(filename: string): Observable<Blob> {
+    const params: HttpParams = new HttpParams()
+      .set('env', this.environment.production ? 'prod' : 'dev');
+    return this.httpClient.get(`${this.environment.baseUrl}/${filename}`, {
+      params,
+      responseType: 'blob'
+    });
+  }
 }
