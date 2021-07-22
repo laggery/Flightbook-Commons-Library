@@ -141,6 +141,10 @@ export class FlightService extends Store<Flight[]> {
       params = params.append('glider-type', this.filter.gliderType);
       filterState = true
     }
+    if (this.filter.description && this.filter.description !== "") {
+      params = params.append('description', this.filter.description);
+      filterState = true
+    }
     this.setFilterState(filterState);
     return params;
   }

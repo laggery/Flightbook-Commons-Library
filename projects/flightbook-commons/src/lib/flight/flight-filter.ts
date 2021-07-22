@@ -5,6 +5,7 @@ export class FlightFilter {
     from: Date;
     to: Date;
     gliderType: string;
+    description: string;
 
     constructor() {
         this.glider = new Glider();
