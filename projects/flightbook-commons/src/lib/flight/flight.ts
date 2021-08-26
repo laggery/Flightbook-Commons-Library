@@ -13,5 +13,6 @@ export class Flight {
     description?: string;
     price?: number;
     timestamp?: Date;
-    filepath?: File;
+    igcFilepath?: string;
+    igcFile?: File;
 }
