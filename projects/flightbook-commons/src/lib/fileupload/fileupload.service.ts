@@ -13,14 +13,25 @@ export class FileUploadService {
 
   uploadFile(formData: FormData): Observable<any> {
     return this.httpClient
-      .post(`${this.environment.baseUrl}/upload/igcfile`, formData, {
+      .post(`${this.environment.baseUrl}/file/upload`, formData, {
+        reportProgress: true,
+        observe: 'events',
+      })
+  }
+
+  copyFile(sourceFileName: string, destinationFileName: string): Observable<any> {
+    return this.httpClient
+      .post(`${this.environment.baseUrl}/file/copy`, {
+        sourceFileName: sourceFileName,
+        destinationFileName: destinationFileName
+      }, {
         reportProgress: true,
         observe: 'events',
       })
   }
 
   getFile(filename: string): Observable<Blob> {
-    return this.httpClient.get(`${this.environment.baseUrl}/${filename}`, {
+    return this.httpClient.get(`${this.environment.baseUrl}/file/${filename}`, {
       responseType: 'blob'
     });
   }
