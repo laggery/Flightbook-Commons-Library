@@ -6,6 +6,8 @@ export * from './lib/flight/flight.service';
 export * from './lib/flight/flight';
 export * from './lib/flight/flight-filter';
 export * from './lib/flight/flightStatistic';
+export * from './lib/flight/igc';
+export * from './lib/flight/point';
 export * from './lib/flight/flight.module';
 
 export * from './lib/glider/glider.service';
