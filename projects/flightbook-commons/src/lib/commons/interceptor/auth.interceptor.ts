@@ -42,6 +42,9 @@ export class HttpAuthInterceptor implements HttpInterceptor {
         if (validityCheck) {
             const authenticated = await this.accoutService.isAuth();
             if (authenticated) {
+                if (req.url.includes('file/upload')){
+                  return next.handle(this.setFormDataHeaders(req)).toPromise();
+                }
                 return next.handle(this.setHeaders(req)).toPromise();
             } else {
                 // this.menuCtrl.enable(false);
@@ -60,4 +63,11 @@ export class HttpAuthInterceptor implements HttpInterceptor {
             }
         });
     }
+  private setFormDataHeaders(request: HttpRequest<any>): HttpRequest<any> {
+    return request.clone({
+      setHeaders: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`
+      }
+    });
+  }
 }

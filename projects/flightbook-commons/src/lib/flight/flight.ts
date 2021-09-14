@@ -1,5 +1,6 @@
 import { Place } from '../place/place';
 import { Glider } from '../glider/glider';
+import { Igc } from './igc';
 
 export class Flight {
     id: number;
@@ -13,4 +14,6 @@ export class Flight {
     description?: string;
     price?: number;
     timestamp?: Date;
+    igc?: Igc;
+    igcFile?: File;
 }

@@ -75,6 +75,7 @@ export class XlsxExportService {
       flatFlight[this.translate.instant('flight.description')] = flight.description;
       flatFlight[this.translate.instant('flight.glider')] = `${flight.glider.brand} ${flight.glider.name}`;
       flatFlight[this.translate.instant('glider.tandem')] = (flight.glider.tandem) ? this.translate.instant('buttons.yes') : this.translate.instant('buttons.no');
+      flatFlight[this.translate.instant('flight.igcFile')] = flight.igc?.filepath;
       list.push(flatFlight);
     })
 

@@ -34,7 +34,7 @@ export class FlightService extends Store<Flight[]> {
 
     return this.http.get<Flight[]>(`${this.environment.baseUrl}/flights`, { params }).pipe(
       map((response: Flight[]) => {
-        let newState
+        let newState;
         if (store) {
           if (clearStore) {
             newState = [...response];
@@ -54,7 +54,7 @@ export class FlightService extends Store<Flight[]> {
   getStatistics(years?: boolean): Observable<FlightStatistic | FlightStatistic[]> {
     let params: HttpParams = this.createFilterParams();
     if (years) {
-      params = params.append('years', "1");
+      params = params.append('years', '1');
     }
     return this.http.get<FlightStatistic | FlightStatistic[]>(`${this.environment.baseUrl}/flights/statistic`, { params })
   }
@@ -127,19 +127,19 @@ export class FlightService extends Store<Flight[]> {
     let filterState = false;
     if (this.filter.glider.id && this.filter.glider.id !== null) {
       params = params.append('glider', this.filter.glider.id.toString());
-      filterState = true
+      filterState = true;
     }
     if (this.filter.from && this.filter.from !== null) {
       params = params.append('from', moment(this.filter.from).format('YYYY-MM-DD'));
-      filterState = true
+      filterState = true;
     }
     if (this.filter.to && this.filter.to !== null) {
       params = params.append('to', moment(this.filter.to).format('YYYY-MM-DD'));
-      filterState = true
+      filterState = true;
     }
-    if (this.filter.gliderType && this.filter.gliderType !== "") {
+    if (this.filter.gliderType && this.filter.gliderType !== '') {
       params = params.append('glider-type', this.filter.gliderType);
-      filterState = true
+      filterState = true;
     }
     if (this.filter.description && this.filter.description !== "") {
       params = params.append('description', this.filter.description);
