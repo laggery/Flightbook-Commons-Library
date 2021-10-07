@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import * as fileSaver from 'file-saver';
-import * as XLSX from 'xlsx';
 import * as moment from 'moment';
 import { Flight } from '../../flight/flight';
 import { Glider } from '../../glider/glider';
@@ -16,25 +15,37 @@ const EXCEL_EXTENSION = '.xlsx';
 })
 export class XlsxExportService {
 
+  XLSX: any;
+
   constructor(private translate: TranslateService) { }
 
-  public generateFlightsXlsxFile(flights: Flight[], writeOptions: XLSX.WritingOptions): any {
-    return this.generateFlightbookXlsxFile(flights, null, null, writeOptions);
+  async loadXlsx() {
+    if (!this.XLSX) {
+      const xlsxModule = await import('xlsx');
+      this.XLSX = xlsxModule;
+    }
   }
 
-  public generateGlidersXlsxFile(gliders: Glider[], writeOptions: XLSX.WritingOptions): any {
-    return this.generateFlightbookXlsxFile(null, gliders, null, writeOptions);
+  public async generateFlightsXlsxFile(flights: Flight[], writeOptions: any): Promise<any> {
+    return await this.generateFlightbookXlsxFile(flights, null, null, writeOptions);
   }
 
-  public generatePlacesXlsxFile(places: Place[], writeOptions: XLSX.WritingOptions): any {
-    return this.generateFlightbookXlsxFile(null, null, places, writeOptions);
+  public async generateGlidersXlsxFile(gliders: Glider[], writeOptions: any): Promise<any> {
+    return await this.generateFlightbookXlsxFile(null, gliders, null, writeOptions);
   }
 
-  public generateFlightbookXlsxFile(flights: Flight[], gliders: Glider[], places: Place[], writeOptions: XLSX.WritingOptions): any {
+  public async generatePlacesXlsxFile(places: Place[], writeOptions: any): Promise<any> {
+    return await this.generateFlightbookXlsxFile(null, null, places, writeOptions);
+  }
+
+  public async generateFlightbookXlsxFile(flights: Flight[], gliders: Glider[], places: Place[], writeOptions: any): Promise<any> {
     if (!flights && !gliders && !places) {
       return null;
     }
-    let workbook: XLSX.WorkBook = { Sheets: {}, SheetNames: [] };
+
+    await this.loadXlsx();
+
+    let workbook: any = { Sheets: {}, SheetNames: [] };
     if (flights) {
       workbook.Sheets.flights = this.flightSheet(flights);
       workbook.SheetNames.push('flights');
@@ -50,7 +61,7 @@ export class XlsxExportService {
       workbook.SheetNames.push('places');
     }
 
-    const data: any = XLSX.write(workbook, writeOptions);
+    const data: any = this.XLSX.write(workbook, writeOptions);
     return data;
   }
 
@@ -61,7 +72,7 @@ export class XlsxExportService {
     fileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
 
-  private flightSheet(flights: Flight[]): XLSX.WorkSheet {
+  private flightSheet(flights: Flight[]): any {
     let list: any = [];
     flights.forEach((flight: Flight) => {
       let flatFlight: any = [];
@@ -79,10 +90,10 @@ export class XlsxExportService {
       list.push(flatFlight);
     })
 
-    return XLSX.utils.json_to_sheet(list);
+    return this.XLSX.utils.json_to_sheet(list);
   }
 
-  private gliderSheet(gliders: Glider[]): XLSX.WorkSheet {
+  private gliderSheet(gliders: Glider[]): any {
     let list: any = [];
     gliders.forEach((glider: Glider) => {
       let flatGlider: any = [];
@@ -95,10 +106,10 @@ export class XlsxExportService {
       list.push(flatGlider);
     })
 
-    return XLSX.utils.json_to_sheet(list);
+    return this.XLSX.utils.json_to_sheet(list);
   }
 
-  private placeSheet(places: Place[]): XLSX.WorkSheet {
+  private placeSheet(places: Place[]): any {
     let list: any = [];
     places.forEach((place: Place) => {
       let flatPlace: any = [];
@@ -107,6 +118,6 @@ export class XlsxExportService {
       list.push(flatPlace);
     })
 
-    return XLSX.utils.json_to_sheet(list);
+    return this.XLSX.utils.json_to_sheet(list);
   }
 }

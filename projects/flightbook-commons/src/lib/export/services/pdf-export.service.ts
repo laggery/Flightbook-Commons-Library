@@ -1,8 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { createPdf, TCreatedPdf } from "pdfmake/build/pdfmake";
-import * as pdfFonts from "pdfmake/build/vfs_fonts";
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { User } from '../../account/user';
 import { Flight } from '../../flight/flight';
@@ -12,9 +10,22 @@ import { Flight } from '../../flight/flight';
 })
 export class PdfExportService {
 
+  pdfMake: any;
+
   constructor(private datePipe: DatePipe, private translate: TranslateService) { }
 
-  generatePdf(flights: Flight[], user: User, generateFrom?: string): TCreatedPdf {
+  async loadPdfMaker() {
+    if (!this.pdfMake) {
+      const pdfMakeModule = await import('pdfmake/build/pdfmake');
+      const pdfFontsModule = await import('pdfmake/build/vfs_fonts');
+      this.pdfMake = pdfMakeModule;
+      this.pdfMake.vfs = pdfFontsModule.pdfMake.vfs;
+    }
+  }
+
+  async generatePdf(flights: Flight[], user: User, generateFrom?: string): Promise<any> {
+    await this.loadPdfMaker();
+
     if (!generateFrom) {
       generateFrom = 'https://flightbook.ch';
     }
@@ -222,6 +233,6 @@ export class PdfExportService {
       }
     };
 
-    return createPdf(docDefinition, null, null, pdfFonts.pdfMake.vfs);
+    return this.pdfMake.createPdf(docDefinition, null, null, this.pdfMake.vfs);
   }
 }
