@@ -42,6 +42,14 @@ export class GliderService extends Store<Glider[]> {
     );
   }
 
+  getGliderByName(name: string): Observable<Glider> {
+    if (!name) {
+      return;
+    }
+
+    return this.http.get<Glider>(`${this.environment.baseUrl}/gliders/name/${name}`);
+  }
+
   getPager({ limit = null, offset = null }: { limit?: number, offset?: number } = {}): Observable<Pager> {
     let params: HttpParams = this.createFilterParams(limit, offset);
     return this.http.get<Pager>(`${this.environment.baseUrl}/gliders/pager`, { params });

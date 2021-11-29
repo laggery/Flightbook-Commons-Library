@@ -1,6 +1,6 @@
 import { Place } from '../place/place';
 import { Glider } from '../glider/glider';
-import { Igc } from './igc';
+import { Igc } from '../igc/igc';
 
 export class Flight {
     id: number;

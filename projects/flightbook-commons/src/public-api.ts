@@ -6,8 +6,6 @@ export * from './lib/flight/flight.service';
 export * from './lib/flight/flight';
 export * from './lib/flight/flight-filter';
 export * from './lib/flight/flightStatistic';
-export * from './lib/flight/igc';
-export * from './lib/flight/point';
 export * from './lib/flight/flight.module';
 
 export * from './lib/glider/glider.service';
@@ -42,3 +40,8 @@ export * from './lib/export/services/pdf-export.service';
 
 export * from './lib/fileupload/fileupload.service';
 export * from './lib/fileupload/fileupload.module';
+
+export * from './lib/igc/igc.module';
+export * from './lib/igc/igc.service';
+export * from './lib/igc/igc';
+export * from './lib/igc/point';
